@@ -1,17 +1,4 @@
-import {
-    Avatar,
-    Box,
-    Button,
-    Circle,
-    Container,
-    Flex,
-    Input,
-    Skeleton,
-    SkeletonCircle,
-    Text,
-    Textarea,
-    VStack,
-} from "@chakra-ui/react"
+import { Avatar, Box, Container, Flex, SkeletonCircle, Text } from "@chakra-ui/react"
 import type { GetServerSidePropsContext, NextPage } from "next"
 import { useEffect, useRef, useState } from "react"
 import TextBox from "../components/textBox"
@@ -86,9 +73,7 @@ const Page = ({ id }: Props) => {
                     ) : (
                         <Flex fontSize={"xs"} alignItems={"center"} gap={"2"}>
                             <Text>切断済み</Text>
-                            <Box w="3" h="3">
-                                <Circle bg={"red"} />
-                            </Box>
+                            <Box w="3" h="3" rounded={"full"} bg={"red.400"}></Box>
                         </Flex>
                     )}
                 </Flex>
@@ -120,8 +105,12 @@ const Page = ({ id }: Props) => {
                                 return (
                                     <Box w={"full"} key={message.id}>
                                         <Flex>
-                                            <Box w={"8"} mr="4"></Box>
-                                            <Box>
+                                            <Box w={"8"} mr="4">
+                                                <Avatar name={message.tag} size="sm"></Avatar>
+                                            </Box>
+                                            <Box fontSize={"md"}>
+                                                <Text fontWeight={"bold"}>{message.tag}</Text>
+
                                                 <Text>{message.content}</Text>
                                             </Box>
                                         </Flex>

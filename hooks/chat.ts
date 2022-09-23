@@ -3,29 +3,19 @@ import {
     GetMessageProtocol,
     GetUsersProtocol,
     HelloProtocol,
+    MessageProtocol,
     PostMessageProtocol,
     StreamProtocol,
     UpdateMessageProtocol,
     UpdateProtocol,
     UpdateUserProtocol,
+    UserProtocol,
 } from "../utils/protocol"
 import { Secret } from "../utils/secret"
 
-export interface User {
-    id: string
-    username: string
-    icon: string
-}
-
-export interface Message {
-    id: string
-    authorId: string
-    content: string
-}
-
 export const useChat = (clientId: string) => {
-    const [users, setUsers] = useState<Record<string, User>>({})
-    const [messages, setMessages] = useState<Message[]>([])
+    const [users, setUsers] = useState<Record<string, UserProtocol>>({})
+    const [messages, setMessages] = useState<MessageProtocol[]>([])
 
     const socketRef = useRef<WebSocket>()
     const [isConnected, setIsConnected] = useState(false)
@@ -126,13 +116,13 @@ export const useChat = (clientId: string) => {
         } catch {}
     }
 
-    const updateMessages = (newMessages: Message[]) => {
+    const updateMessages = (newMessages: MessageProtocol[]) => {
         setMessages((msgs) => {
             return Array.from(new Set(newMessages.concat(msgs)))
         })
     }
 
-    const updateUsers = (userList: User[]) => {
+    const updateUsers = (userList: UserProtocol[]) => {
         userList.forEach((u) => {
             setUsers((prev) => {
                 return {

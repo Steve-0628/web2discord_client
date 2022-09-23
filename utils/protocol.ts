@@ -35,7 +35,7 @@ export interface GetUsersProtocol extends GetProtocol {
     data: {
         id: string
         target: "Users"
-    }
+    } & unknown
 }
 
 export interface GetMessageProtocol extends GetProtocol {
@@ -95,6 +95,7 @@ export interface MessageProtocol {
     date: string
     authorId: string
     content: string
+    tag: string
 }
 
 export interface ErrorProtocol extends StreamProtocol {

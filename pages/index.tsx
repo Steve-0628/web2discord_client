@@ -5,6 +5,7 @@ import {
     Circle,
     Container,
     Flex,
+    Input,
     Skeleton,
     SkeletonCircle,
     Text,
@@ -13,6 +14,7 @@ import {
 } from "@chakra-ui/react"
 import type { GetServerSidePropsContext, NextPage } from "next"
 import { useEffect, useRef, useState } from "react"
+import TextBox from "../components/textBox"
 import { useChat } from "../hooks/chat"
 import { Secret } from "../utils/secret"
 
@@ -48,7 +50,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 }
 
 const Page = ({ id }: Props) => {
-    const { users, messages, isConnected, connect, getMessages, getUsers } = useChat(id)
+    const { users, messages, isConnected, connect, getMessages, getUsers, postMessage } = useChat(id)
     const messageBottomRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
@@ -130,24 +132,8 @@ const Page = ({ id }: Props) => {
                     </Flex>
                 </Box>
             </Box>
-            <Box mt={"auto"} h={"24"} w={"full"} py={"2"} px={"4"} position={"sticky"} bottom={"0"}>
-                <form
-                    onSubmit={(e) => {
-                        e.preventDefault()
-                    }}
-                >
-                    <Flex>
-                        <Textarea
-                            placeholder={"メッセージを入力..."}
-                            w={"full"}
-                            bg={"gray.700"}
-                            _placeholder={{ color: "inherit" }}
-                        />
-                        <Button type={"submit"} colorScheme={"blue"} mx={"2"}>
-                            送信
-                        </Button>
-                    </Flex>
-                </form>
+            <Box mt={"auto"} h={"36"} w={"full"} py={"2"} px={"4"} position={"sticky"} bottom={"0"} bg={"gray.800"}>
+                <TextBox onSubmit={postMessage} />
             </Box>
         </Container>
     )

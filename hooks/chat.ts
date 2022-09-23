@@ -3,6 +3,7 @@ import {
     GetMessageProtocol,
     GetUsersProtocol,
     HelloProtocol,
+    PostMessageProtocol,
     StreamProtocol,
     UpdateMessageProtocol,
     UpdateProtocol,
@@ -110,7 +111,20 @@ export const useChat = (clientId: string) => {
         } catch {}
     }
 
-    const postMessage = async (username: string, message: string) => {}
+    const postMessage = async (username: string, message: string) => {
+        const payload: PostMessageProtocol = {
+            type: "Post",
+            data: {
+                id: clientId,
+                target: "Message",
+                username,
+                message,
+            },
+        }
+        try {
+            socketRef.current?.send(JSON.stringify(payload))
+        } catch {}
+    }
 
     const updateMessages = (newMessages: Message[]) => {
         setMessages((msgs) => {

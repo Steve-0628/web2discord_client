@@ -1,4 +1,16 @@
-import { Avatar, Box, Button, Flex, Text, VStack } from "@chakra-ui/react"
+import {
+    Avatar,
+    Box,
+    Button,
+    Circle,
+    Container,
+    Flex,
+    Skeleton,
+    SkeletonCircle,
+    Text,
+    Textarea,
+    VStack,
+} from "@chakra-ui/react"
 import type { GetServerSidePropsContext, NextPage } from "next"
 import { useEffect, useRef, useState } from "react"
 import { useChat } from "../hooks/chat"
@@ -59,54 +71,85 @@ const Page = ({ id }: Props) => {
     }
 
     return (
-        <div>
-            <div>Connected: {isConnected ? "Yes" : "No"}</div>
-            <Flex flexDirection={"column-reverse"} px={4}>
-                <Box ref={messageBottomRef} />
-
-                {messages.map((message) => {
-                    const user = users[message.authorId]
-
-                    if (user) {
-                        return (
-                            <Box w={"full"} mt={"4"} key={message.id}>
-                                <Flex>
-                                    <Box w={"8"} mr="4">
-                                        <Avatar name={user.username} size="sm"></Avatar>
-                                    </Box>
-                                    <Box fontSize={"md"}>
-                                        <Text fontWeight={"bold"}>{user.username}</Text>
-
-                                        <Text>{message.content}</Text>
-                                    </Box>
-                                </Flex>
+        <Container maxW={"container.xl"} h={"screen"}>
+            <Box position={"sticky"} top={"4"}>
+                <Flex ml={"auto"} justifyContent={"end"}>
+                    {isConnected ? (
+                        <Flex fontSize={"xs"} alignItems={"center"} gap={"2"}>
+                            <Text>リアルタイム更新中</Text>
+                            <Box w="3" h="3">
+                                <SkeletonCircle startColor="green.100" endColor="green.300" w="full" h="full" />
                             </Box>
-                        )
-                    } else {
-                        return (
-                            <Box w={"full"} key={message.id}>
-                                <Flex>
-                                    <Box w={"8"} mr="4"></Box>
-                                    <Box>
-                                        <Text>{message.content}</Text>
-                                    </Box>
-                                </Flex>
+                        </Flex>
+                    ) : (
+                        <Flex fontSize={"xs"} alignItems={"center"} gap={"2"}>
+                            <Text>切断済み</Text>
+                            <Box w="3" h="3">
+                                <Circle bg={"red"} />
                             </Box>
-                        )
-                    }
-                })}
-            </Flex>
-            {/* <div>{JSON.stringify(users)}</div> */}
-            <div>
-                {/* <Button
-                    onClick={() => {
-                        getMessages(50)
+                        </Flex>
+                    )}
+                </Flex>
+            </Box>
+            <Box w={"full"} position={"relative"}>
+                <Box>
+                    <Flex flexDirection={"column-reverse"} px={4}>
+                        <Box ref={messageBottomRef} />
+
+                        {messages.map((message) => {
+                            const user = users[message.authorId]
+
+                            if (user) {
+                                return (
+                                    <Box w={"full"} mt={"4"} key={message.id}>
+                                        <Flex>
+                                            <Box w={"8"} mr="4">
+                                                <Avatar name={user.username} size="sm"></Avatar>
+                                            </Box>
+                                            <Box fontSize={"md"}>
+                                                <Text fontWeight={"bold"}>{user.username}</Text>
+
+                                                <Text>{message.content}</Text>
+                                            </Box>
+                                        </Flex>
+                                    </Box>
+                                )
+                            } else {
+                                return (
+                                    <Box w={"full"} key={message.id}>
+                                        <Flex>
+                                            <Box w={"8"} mr="4"></Box>
+                                            <Box>
+                                                <Text>{message.content}</Text>
+                                            </Box>
+                                        </Flex>
+                                    </Box>
+                                )
+                            }
+                        })}
+                    </Flex>
+                </Box>
+            </Box>
+            <Box mt={"auto"} h={"24"} w={"full"} py={"2"} px={"4"} position={"sticky"} bottom={"0"}>
+                <form
+                    onSubmit={(e) => {
+                        e.preventDefault()
                     }}
                 >
-                    Load
-                </Button> */}
-            </div>
-        </div>
+                    <Flex>
+                        <Textarea
+                            placeholder={"メッセージを入力..."}
+                            w={"full"}
+                            bg={"gray.700"}
+                            _placeholder={{ color: "inherit" }}
+                        />
+                        <Button type={"submit"} colorScheme={"blue"} mx={"2"}>
+                            送信
+                        </Button>
+                    </Flex>
+                </form>
+            </Box>
+        </Container>
     )
 }
 

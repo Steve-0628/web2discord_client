@@ -64,6 +64,10 @@ export const useChat = (clientId: string) => {
                 }
             }
         }
+        socketRef.current.onclose = () => {
+            console.log("WebSocket closed")
+            setIsConnected(false)
+        }
     }
 
     const hello = () => {
@@ -73,8 +77,9 @@ export const useChat = (clientId: string) => {
                 id: clientId,
             },
         }
-
-        socketRef.current?.send(JSON.stringify(hello))
+        try {
+            socketRef.current?.send(JSON.stringify(hello))
+        } catch {}
     }
 
     const getUsers = async () => {
@@ -85,8 +90,9 @@ export const useChat = (clientId: string) => {
                 target: "Users",
             },
         }
-
-        socketRef.current?.send(JSON.stringify(get))
+        try {
+            socketRef.current?.send(JSON.stringify(get))
+        } catch {}
     }
 
     const getMessages = async (count: number, before?: string) => {
@@ -99,7 +105,9 @@ export const useChat = (clientId: string) => {
                 before,
             },
         }
-        socketRef.current?.send(JSON.stringify(payload))
+        try {
+            socketRef.current?.send(JSON.stringify(payload))
+        } catch {}
     }
 
     const postMessage = async (username: string, message: string) => {}

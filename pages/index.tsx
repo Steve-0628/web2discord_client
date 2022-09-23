@@ -1,4 +1,5 @@
-import { Avatar, Box, Container, Flex, SkeletonCircle, Text } from "@chakra-ui/react"
+import { Avatar, Box, Container, Flex, Image, SkeletonCircle, Text, VStack } from "@chakra-ui/react"
+import { ExternalLinkIcon } from "@chakra-ui/icons"
 import type { GetServerSidePropsContext, NextPage } from "next"
 import { useEffect, useRef, useState } from "react"
 import TextBox from "../components/textBox"
@@ -86,37 +87,67 @@ const Page = ({ id }: Props) => {
                         {messages.map((message) => {
                             const user = users[message.authorId]
 
-                            if (user) {
-                                return (
-                                    <Box w={"full"} mt={"4"} key={message.id}>
-                                        <Flex>
-                                            <Box w={"8"} mr="4">
-                                                <Avatar name={user.username} size="sm"></Avatar>
-                                            </Box>
+                            return (
+                                <Box w={"full"} my={"2"} key={message.id}>
+                                    <Flex>
+                                        <Box w={"8"} mr="4">
+                                            <Avatar name={user ? user.username : message.tag} size="sm"></Avatar>
+                                        </Box>
+                                        <Flex direction={"column"}>
                                             <Box fontSize={"md"}>
-                                                <Text fontWeight={"bold"}>{user.username}</Text>
+                                                <Text fontWeight={"bold"}>{user ? user.username : message.tag}</Text>
 
                                                 <Text>{message.content}</Text>
                                             </Box>
+                                            {message.attachments.length > 0 && (
+                                                <Box>
+                                                    <Flex>
+                                                        {message.attachments.map((attachment) => {
+                                                            switch (attachment.type) {
+                                                                case "Image": {
+                                                                    return (
+                                                                        <Image
+                                                                            maxH={"72"}
+                                                                            key={attachment.id}
+                                                                            src={attachment.url}
+                                                                        />
+                                                                    )
+                                                                }
+                                                                case "Video": {
+                                                                    return (
+                                                                        <a href={attachment.url} target={"__blank"}>
+                                                                            <Flex
+                                                                                key={attachment.id}
+                                                                                direction={"column"}
+                                                                                h={"32"}
+                                                                                w={"40"}
+                                                                                opacity={0.75}
+                                                                            >
+                                                                                <Flex
+                                                                                    m="auto"
+                                                                                    fontSize={"lg"}
+                                                                                    fontWeight="bold"
+                                                                                    placeItems={"center"}
+                                                                                >
+                                                                                    <Text>動画</Text>
+                                                                                    <ExternalLinkIcon ml="2" />
+                                                                                </Flex>
+                                                                            </Flex>
+                                                                        </a>
+                                                                    )
+                                                                }
+                                                                default: {
+                                                                    return <Box></Box>
+                                                                }
+                                                            }
+                                                        })}
+                                                    </Flex>
+                                                </Box>
+                                            )}
                                         </Flex>
-                                    </Box>
-                                )
-                            } else {
-                                return (
-                                    <Box w={"full"} key={message.id}>
-                                        <Flex>
-                                            <Box w={"8"} mr="4">
-                                                <Avatar name={message.tag} size="sm"></Avatar>
-                                            </Box>
-                                            <Box fontSize={"md"}>
-                                                <Text fontWeight={"bold"}>{message.tag}</Text>
-
-                                                <Text>{message.content}</Text>
-                                            </Box>
-                                        </Flex>
-                                    </Box>
-                                )
-                            }
+                                    </Flex>
+                                </Box>
+                            )
                         })}
                     </Flex>
                 </Box>

@@ -1,5 +1,5 @@
 import { Button, Flex, Input, Textarea } from "@chakra-ui/react"
-import { useState } from "react"
+import { useRef, useState } from "react"
 
 interface Props {
     onSubmit: (username: string, message: string) => void
@@ -9,16 +9,24 @@ const TextBox = ({ onSubmit }: Props) => {
     const [username, setUsername] = useState("")
     const [message, setMessage] = useState("")
 
+    const submitButtonRef = useRef<HTMLButtonElement>(null)
+    const messageInputRef = useRef<HTMLTextAreaElement>(null)
+
     const handleSubmit = () => {
+        if (username === "" || message === "") {
+            return
+        }
         onSubmit(username, message)
         setMessage("")
+        if (messageInputRef.current) {
+            messageInputRef.current.value = ""
+        }
     }
 
     return (
         <form
             onSubmit={(e) => {
                 e.preventDefault()
-                // postMessage()
                 handleSubmit()
             }}
         >
@@ -32,11 +40,12 @@ const TextBox = ({ onSubmit }: Props) => {
                             setUsername(e.target.value)
                         }}
                     />
-                    <Button type={"submit"} colorScheme={"blue"} mx={"2"}>
+                    <Button ref={submitButtonRef} type={"submit"} colorScheme={"blue"} mx={"2"}>
                         送信
                     </Button>
                 </Flex>
                 <Textarea
+                    ref={messageInputRef}
                     placeholder={"メッセージを入力..."}
                     bg={"gray.700"}
                     _placeholder={{ color: "inherit" }}
@@ -44,9 +53,8 @@ const TextBox = ({ onSubmit }: Props) => {
                         setMessage(e.target.value)
                     }}
                     onKeyDown={(e) => {
-                        if (e.key === "Enter" && e.ctrlKey) {
-                            // postMessage()
-                            handleSubmit()
+                        if ((e.key === "Enter" && e.ctrlKey) || (e.key === "Enter" && e.metaKey)) {
+                            submitButtonRef.current?.click()
                         }
                     }}
                 />

@@ -1,5 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next"
+
 import { Secret } from "../../utils/secret"
 
 type Data = {
@@ -17,7 +18,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     const r = await fetch(`${Secret.AUTH_SERVER}/auth`, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json",
             Cookie: req.headers.cookie ?? "",
         },
     })
@@ -27,6 +27,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         res.setHeader("Set-Cookie", `token=${token}; Path=/; HttpOnly`)
 
         res.status(200).json({ ...json })
+        return
     }
 
     res.status(401).json({ name: "Unauthorized" })

@@ -25,7 +25,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
     if (r.status === 200) {
         const json = await r.json()
-        res.setHeader("Set-Cookie", `token=${token}; Path=/; HttpOnly`)
+        res.setHeader("Set-Cookie", `token=${token}; HttpOnly; SameSite=None; Secure`)
 
         res.status(200).json({ ...json })
         return

@@ -70,7 +70,10 @@ export const useChat = (clientId: string) => {
         }
         try {
             socketRef.current?.send(JSON.stringify(hello))
-        } catch {}
+        } catch {
+            console.log("Hello failed")
+            setIsConnected(false)
+        }
     }
 
     const getUsers = async () => {
@@ -83,7 +86,10 @@ export const useChat = (clientId: string) => {
         }
         try {
             socketRef.current?.send(JSON.stringify(get))
-        } catch {}
+        } catch {
+            console.log("Get users failed")
+            setIsConnected(false)
+        }
     }
 
     const getMessages = async (count: number, before?: string) => {
@@ -98,7 +104,10 @@ export const useChat = (clientId: string) => {
         }
         try {
             socketRef.current?.send(JSON.stringify(payload))
-        } catch {}
+        } catch {
+            console.log("Get messages failed")
+            setIsConnected(false)
+        }
     }
 
     const postMessage = async (username: string, message: string) => {
@@ -113,7 +122,10 @@ export const useChat = (clientId: string) => {
         }
         try {
             socketRef.current?.send(JSON.stringify(payload))
-        } catch {}
+        } catch {
+            console.log("Post message failed")
+            setIsConnected(false)
+        }
     }
 
     const updateMessages = (newMessages: MessageProtocol[]) => {

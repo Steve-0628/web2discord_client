@@ -102,15 +102,21 @@ const Page = ({ id }: Props) => {
                         {messages.map((message) => {
                             const user = users[message.authorId]
 
+                            const username = user ? user.username : message.tag
+
                             return (
                                 <Box w={"full"} my={"2"} key={message.id}>
                                     <Flex>
                                         <Box w={"8"} mr="4">
-                                            <Avatar name={user ? user.username : message.tag} size="sm"></Avatar>
+                                            <Avatar
+                                                name={username}
+                                                src={`/api/icon?username=${username}`}
+                                                size="sm"
+                                            ></Avatar>
                                         </Box>
                                         <Flex direction={"column"}>
                                             <Box fontSize={"md"}>
-                                                <Text fontWeight={"bold"}>{user ? user.username : message.tag}</Text>
+                                                <Text fontWeight={"bold"}>{username}</Text>
 
                                                 <Text>{message.content}</Text>
                                             </Box>

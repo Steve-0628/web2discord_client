@@ -11,6 +11,8 @@ interface Props {
 }
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+    console.log("Cookie: ", ctx.req.headers.cookie)
+
     const res = await fetch(`${Secret.AUTH_SERVER}/auth`, {
         method: "POST",
         headers: {
@@ -62,7 +64,7 @@ const Page = ({ id }: Props) => {
 
     return (
         <Container maxW={"container.xl"} h={"screen"}>
-            <Box position={"sticky"} top={"4"} mb={"8"}>
+            <Box position={"sticky"} top={"4"} mb={"8"} zIndex={"10"}>
                 <Flex ml={"auto"} justifyContent={"end"}>
                     {isConnected ? (
                         <Flex fontSize={"xs"} alignItems={"center"} gap={"2"}>

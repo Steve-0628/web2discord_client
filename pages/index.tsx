@@ -1,4 +1,4 @@
-import { Avatar, Box, Container, Flex, Image, SkeletonCircle, Text, VStack } from "@chakra-ui/react"
+import { Avatar, Box, Button, Container, Flex, Image, SkeletonCircle, Text, VStack } from "@chakra-ui/react"
 import { ExternalLinkIcon } from "@chakra-ui/icons"
 import type { GetServerSidePropsContext, NextPage } from "next"
 import { useEffect, useRef, useState } from "react"
@@ -62,7 +62,7 @@ const Page = ({ id }: Props) => {
 
     return (
         <Container maxW={"container.xl"} h={"screen"}>
-            <Box position={"sticky"} top={"4"}>
+            <Box position={"sticky"} top={"4"} mb={"8"}>
                 <Flex ml={"auto"} justifyContent={"end"}>
                     {isConnected ? (
                         <Flex fontSize={"xs"} alignItems={"center"} gap={"2"}>
@@ -72,9 +72,22 @@ const Page = ({ id }: Props) => {
                             </Box>
                         </Flex>
                     ) : (
-                        <Flex fontSize={"xs"} alignItems={"center"} gap={"2"}>
-                            <Text>切断済み</Text>
-                            <Box w="3" h="3" rounded={"full"} bg={"red.400"}></Box>
+                        <Flex direction={"column"}>
+                            <Flex fontSize={"xs"} alignItems={"center"} gap={"2"}>
+                                <Text>切断済み</Text>
+                                <Box w="3" h="3" rounded={"full"} bg={"red.400"}></Box>
+                            </Flex>
+                            <Flex fontSize={"xs"} alignItems={"center"} gap={"2"}>
+                                <Button
+                                    variant={"ghost"}
+                                    size={"xs"}
+                                    onClick={() => {
+                                        connect()
+                                    }}
+                                >
+                                    再接続
+                                </Button>
+                            </Flex>
                         </Flex>
                     )}
                 </Flex>

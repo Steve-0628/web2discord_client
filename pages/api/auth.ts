@@ -18,6 +18,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     const r = await fetch(`${Secret.AUTH_SERVER}/auth`, {
         method: "POST",
         headers: {
+            "Content-Type": "application/json",
             Cookie: req.headers.cookie ?? "",
         },
         body: JSON.stringify({ token }),

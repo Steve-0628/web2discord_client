@@ -22,6 +22,7 @@ export const useClient = () => {
             const json = await res.json()
             const id = json.id
             setCookie("client_id", id)
+            setCookie("token", token)
         } else {
             setStatus("error")
         }

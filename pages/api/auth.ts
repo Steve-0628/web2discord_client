@@ -20,6 +20,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         headers: {
             Cookie: req.headers.cookie ?? "",
         },
+        body: JSON.stringify({ token }),
     })
 
     if (r.status === 200) {

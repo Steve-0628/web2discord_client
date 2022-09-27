@@ -43,7 +43,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
 const Page = ({ id }: Props) => {
     const { users, messages, isConnected, connect, getMessages, getUsers, postMessage } = useChat(id)
-    const { ref: bottomRef, inView: isBottomInView } = useInView()
+    const { ref: bottomRef, inView: isBottomInView, entry } = useInView()
     const scrollRef = useRef<HTMLDivElement>(null)
     const [beforeFirstLoad, setBeforeFirstLoad] = useState(true)
 
@@ -71,6 +71,16 @@ const Page = ({ id }: Props) => {
 
     const onSkeltonEnter = () => {
         console.log("skelton enter")
+        if (beforeFirstLoad) {
+            return
+        }
+
+        // 古いメッセージを読み込む
+        const oldestMessage = messages[messages.length - 1]
+        if (oldestMessage) {
+            console.log("oldest:", oldestMessage)
+            getMessages(50, oldestMessage.id)
+        }
     }
 
     return (

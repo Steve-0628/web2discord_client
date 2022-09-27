@@ -39,10 +39,7 @@ interface Props extends ComponentProps<"div"> {
 const SkeltonMessages = ({ onEnter }: Props) => {
     const count = 10
 
-    const { ref, inView, entry } = useInView({
-        /* Optional options */
-        threshold: 0,
-    })
+    const { ref, inView, entry } = useInView()
 
     useEffect(() => {
         if (inView) {

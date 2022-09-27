@@ -1,10 +1,12 @@
-import { Avatar, Box, Button, Container, Flex, Image, SkeletonCircle, Text, VStack } from "@chakra-ui/react"
+import { Avatar, Box, Button, Container, Flex, Image, SkeletonCircle, Text } from "@chakra-ui/react"
 import { ExternalLinkIcon } from "@chakra-ui/icons"
-import type { GetServerSidePropsContext, NextPage } from "next"
-import { useEffect, useRef, useState } from "react"
+import type { GetServerSidePropsContext } from "next"
+import { useEffect, useRef } from "react"
 import TextBox from "../components/textBox"
 import { useChat } from "../hooks/chat"
 import { Secret } from "../utils/secret"
+import SkeltonMessages from "../components/skeltonMessages"
+import MessageList from "../components/messageList"
 
 interface Props {
     id: string
@@ -99,77 +101,10 @@ const Page = ({ id }: Props) => {
                     <Flex flexDirection={"column-reverse"} px={4}>
                         <Box ref={messageBottomRef} />
 
-                        {messages.map((message) => {
-                            const user = users[message.authorId]
+                        <MessageList users={users} messages={messages} />
 
-                            const username = user ? user.username : message.tag
-
-                            return (
-                                <Box w={"full"} my={"2"} key={message.id}>
-                                    <Flex>
-                                        <Box w={"8"} mr="4">
-                                            <Avatar
-                                                name={username}
-                                                src={`/api/icon?username=${username}`}
-                                                size="sm"
-                                            ></Avatar>
-                                        </Box>
-                                        <Flex direction={"column"}>
-                                            <Box fontSize={"md"}>
-                                                <Text fontWeight={"bold"}>{username}</Text>
-
-                                                <Text>{message.content}</Text>
-                                            </Box>
-                                            {message.attachments.length > 0 && (
-                                                <Box>
-                                                    <Flex>
-                                                        {message.attachments.map((attachment) => {
-                                                            switch (attachment.type) {
-                                                                case "Image": {
-                                                                    return (
-                                                                        <Image
-                                                                            maxH={"72"}
-                                                                            key={attachment.id}
-                                                                            src={attachment.url}
-                                                                        />
-                                                                    )
-                                                                }
-                                                                case "Video": {
-                                                                    return (
-                                                                        <a href={attachment.url} target={"__blank"}>
-                                                                            <Flex
-                                                                                key={attachment.id}
-                                                                                direction={"column"}
-                                                                                h={"32"}
-                                                                                w={"40"}
-                                                                                opacity={0.75}
-                                                                            >
-                                                                                <Flex
-                                                                                    m="auto"
-                                                                                    fontSize={"lg"}
-                                                                                    fontWeight="bold"
-                                                                                    placeItems={"center"}
-                                                                                >
-                                                                                    <Text>動画</Text>
-                                                                                    <ExternalLinkIcon ml="2" />
-                                                                                </Flex>
-                                                                            </Flex>
-                                                                        </a>
-                                                                    )
-                                                                }
-                                                                default: {
-                                                                    return <Box></Box>
-                                                                }
-                                                            }
-                                                        })}
-                                                    </Flex>
-                                                </Box>
-                                            )}
-                                        </Flex>
-                                    </Flex>
-                                </Box>
-                            )
-                        })}
+                        {/* スケルトン */}
+                        <SkeltonMessages />
                     </Flex>
                 </Box>
             </Box>

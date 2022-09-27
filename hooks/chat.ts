@@ -130,7 +130,7 @@ export const useChat = (clientId: string) => {
 
     const updateMessages = (newMessages: MessageProtocol[]) => {
         setMessages((msgs) => {
-            return Array.from(new Set(newMessages.concat(msgs)))
+            return Array.from(new Set(newMessages.concat(msgs))).sort((a, b) => (a.date < b.date ? 1 : -1))
         })
     }
 

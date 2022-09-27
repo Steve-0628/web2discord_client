@@ -25,7 +25,7 @@ const MessageList = ({ users, messages }: Props) => {
                                 <Box fontSize={"md"}>
                                     <Text fontWeight={"bold"}>{username}</Text>
 
-                                    <Text>{message.content}</Text>
+                                    <Text wordBreak={"break-word"}>{message.content}</Text>
                                 </Box>
                                 {message.attachments.length > 0 && (
                                     <Box>

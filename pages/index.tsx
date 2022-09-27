@@ -43,7 +43,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
 const Page = ({ id }: Props) => {
     const { users, messages, isConnected, connect, getMessages, getUsers, postMessage } = useChat(id)
-    const { ref: bottomRef, inView: isBottomInView, entry } = useInView()
+    const { ref: bottomRef, inView: isBottomInView } = useInView()
     const scrollRef = useRef<HTMLDivElement>(null)
     const [beforeFirstLoad, setBeforeFirstLoad] = useState(true)
 
@@ -83,8 +83,8 @@ const Page = ({ id }: Props) => {
 
     return (
         <Container maxW={"container.xl"} h={"screen"}>
-            <Box position={"sticky"} top={"4"} mb={"8"} zIndex={"10"}>
-                <Flex ml={"auto"} justifyContent={"end"}>
+            <Box position={"fixed"} w={"full"} top={"4"} mb={"8"} zIndex={"10"}>
+                <Flex ml={"auto"} justifyContent={"end"} px={"8"}>
                     {isConnected ? (
                         <Flex fontSize={"xs"} alignItems={"center"} gap={"2"}>
                             <Text>リアルタイム更新中</Text>
@@ -113,12 +113,10 @@ const Page = ({ id }: Props) => {
                     )}
                 </Flex>
             </Box>
+
             <Box w={"full"} position={"relative"}>
                 <Box>
                     <Flex flexDirection={"column-reverse"} px={4}>
-                        <Box ref={scrollRef} />
-                        <Box ref={bottomRef} />
-
                         <MessageList users={users} messages={messages} />
 
                         {/* スケルトン */}
@@ -126,6 +124,10 @@ const Page = ({ id }: Props) => {
                     </Flex>
                 </Box>
             </Box>
+
+            <Box ref={bottomRef} />
+            <Box ref={scrollRef} />
+
             <Box mt={"auto"} h={"36"} w={"full"} py={"2"} px={"4"} position={"sticky"} bottom={"0"} bg={"gray.800"}>
                 <TextBox onSubmit={postMessage} />
             </Box>

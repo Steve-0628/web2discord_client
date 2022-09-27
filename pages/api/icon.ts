@@ -9,8 +9,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const username = req.query.username as string
 
-    res.setHeader("Content-Type", "image/png")
-
     // Custom identicon style
     // https://jdenticon.com/icon-designer.html?config=2a194bff01413a132d57295f
     const config: JdenticonConfig = {
@@ -25,6 +23,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         backColor: "#191e4bff",
     }
 
+    res.setHeader("Content-Type", "image/png")
     res.status(200).send(toPng(username, 128, config))
 }
 

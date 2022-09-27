@@ -1,5 +1,6 @@
-import { Avatar, Box, Flex, SkeletonCircle, SkeletonText, Text } from "@chakra-ui/react"
-import { useEffect, useState } from "react"
+import { Box, Flex, SkeletonCircle, SkeletonText } from "@chakra-ui/react"
+import { ComponentProps, useEffect, useState } from "react"
+import { useInView } from "react-intersection-observer"
 
 type WidthType = "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl" | "full"
 
@@ -31,11 +32,26 @@ const SkeltonMMessage = () => {
     )
 }
 
-const SkeltonMessages = () => {
+interface Props extends ComponentProps<"div"> {
+    onEnter: () => void
+}
+
+const SkeltonMessages = ({ onEnter }: Props) => {
     const count = 10
 
+    const { ref, inView, entry } = useInView({
+        /* Optional options */
+        threshold: 0,
+    })
+
+    useEffect(() => {
+        if (inView) {
+            onEnter()
+        }
+    }, [inView])
+
     return (
-        <div>
+        <div ref={ref}>
             {[...Array(count)].map((_, i) => (
                 <SkeltonMMessage key={i} />
             ))}

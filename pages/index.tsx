@@ -1,12 +1,12 @@
-import { Avatar, Box, Button, Container, Flex, Image, SkeletonCircle, Text } from "@chakra-ui/react"
-import { ExternalLinkIcon } from "@chakra-ui/icons"
+import { Box, Button, Container, Flex, SkeletonCircle, Text } from "@chakra-ui/react"
 import type { GetServerSidePropsContext } from "next"
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import TextBox from "../components/textBox"
 import { useChat } from "../hooks/chat"
 import { Secret } from "../utils/secret"
 import SkeltonMessages from "../components/skeltonMessages"
 import MessageList from "../components/messageList"
+import { useInView } from "react-intersection-observer"
 
 interface Props {
     id: string
@@ -43,7 +43,9 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
 const Page = ({ id }: Props) => {
     const { users, messages, isConnected, connect, getMessages, getUsers, postMessage } = useChat(id)
-    const messageBottomRef = useRef<HTMLDivElement>(null)
+    const { ref: bottomRef, inView: isBottomInView } = useInView()
+    const scrollRef = useRef<HTMLDivElement>(null)
+    const [beforeFirstLoad, setBeforeFirstLoad] = useState(true)
 
     useEffect(() => {
         connect()
@@ -61,7 +63,14 @@ const Page = ({ id }: Props) => {
     }, [messages])
 
     const scrollToBottom = () => {
-        messageBottomRef.current?.scrollIntoView({ behavior: "smooth" })
+        if (isBottomInView || beforeFirstLoad) {
+            scrollRef.current?.scrollIntoView({ behavior: "smooth" })
+            setBeforeFirstLoad(false)
+        }
+    }
+
+    const onSkeltonEnter = () => {
+        console.log("skelton enter")
     }
 
     return (
@@ -99,12 +108,13 @@ const Page = ({ id }: Props) => {
             <Box w={"full"} position={"relative"}>
                 <Box>
                     <Flex flexDirection={"column-reverse"} px={4}>
-                        <Box ref={messageBottomRef} />
+                        <Box ref={scrollRef} />
+                        <Box ref={bottomRef} />
 
                         <MessageList users={users} messages={messages} />
 
                         {/* スケルトン */}
-                        <SkeltonMessages />
+                        {messages.length > 0 && <SkeltonMessages onEnter={onSkeltonEnter} />}
                     </Flex>
                 </Box>
             </Box>

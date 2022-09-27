@@ -59,14 +59,14 @@ const Page = ({ id }: Props) => {
     }, [isConnected])
 
     useEffect(() => {
-        scrollToBottom()
+        if (isBottomInView || beforeFirstLoad) {
+            scrollToBottom()
+            setBeforeFirstLoad(false)
+        }
     }, [messages])
 
     const scrollToBottom = () => {
-        if (isBottomInView || beforeFirstLoad) {
-            scrollRef.current?.scrollIntoView({ behavior: "smooth" })
-            setBeforeFirstLoad(false)
-        }
+        scrollRef.current?.scrollIntoView({ behavior: "smooth" })
     }
 
     const onSkeltonEnter = () => {
@@ -129,6 +129,22 @@ const Page = ({ id }: Props) => {
             <Box ref={scrollRef} />
 
             <Box mt={"auto"} h={"36"} w={"full"} py={"2"} px={"4"} position={"sticky"} bottom={"0"} bg={"gray.800"}>
+                {!isBottomInView && (
+                    <Box position={"absolute"} top={"-36px"} right={"16px"}>
+                        <Flex justifyContent={"end"}>
+                            <Button
+                                size={"sm"}
+                                variant={"ghost"}
+                                colorScheme={"cyan"}
+                                onClick={() => {
+                                    scrollToBottom()
+                                }}
+                            >
+                                最新メッセージに戻る
+                            </Button>
+                        </Flex>
+                    </Box>
+                )}
                 <TextBox onSubmit={postMessage} />
             </Box>
         </Container>

@@ -70,7 +70,6 @@ const Page = ({ id }: Props) => {
     }
 
     const onSkeltonEnter = () => {
-        console.log("skelton enter")
         if (beforeFirstLoad) {
             return
         }
@@ -78,7 +77,6 @@ const Page = ({ id }: Props) => {
         // 古いメッセージを読み込む
         const oldestMessage = messages[messages.length - 1]
         if (oldestMessage) {
-            console.log("oldest:", oldestMessage)
             getMessages(50, oldestMessage.id)
         }
     }

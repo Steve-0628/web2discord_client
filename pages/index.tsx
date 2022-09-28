@@ -83,8 +83,8 @@ const Page = ({ id }: Props) => {
 
     return (
         <Container maxW={"container.xl"} h={"screen"}>
-            <Box position={"fixed"} top={"4"} right={"8"} mb={"8"} zIndex={"10"}>
-                <Box px={"8"}>
+            <Box position={"fixed"} top={"4"} right={["4", "8"]} mb={"8"} zIndex={"10"}>
+                <Box>
                     {isConnected ? (
                         <Flex fontSize={"xs"} alignItems={"center"} gap={"2"}>
                             <Text>リアルタイム更新中</Text>

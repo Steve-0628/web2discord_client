@@ -43,9 +43,12 @@ const MessageList = ({ users, messages }: Props) => {
                                                     }
                                                     case "Video": {
                                                         return (
-                                                            <a href={attachment.url} target={"__blank"}>
+                                                            <a
+                                                                href={attachment.url}
+                                                                target={"__blank"}
+                                                                key={attachment.id}
+                                                            >
                                                                 <Flex
-                                                                    key={attachment.id}
                                                                     direction={"column"}
                                                                     h={"32"}
                                                                     w={"40"}

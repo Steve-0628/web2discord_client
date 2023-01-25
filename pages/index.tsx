@@ -7,13 +7,23 @@ import { Secret } from "../utils/secret"
 import SkeltonMessages from "../components/skeltonMessages"
 import MessageList from "../components/messageList"
 import { useInView } from "react-intersection-observer"
+import { userDB } from "../utils/db/user"
 
 interface Props {
-    id: string
+    id: string,
+    username?: string,
 }
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     console.log("Cookie: ", ctx.req.headers.cookie)
+    const arr = ctx.req.headers.cookie?.match(/CF_Authorization=[^\. ]+\.(?<val>[^\.]+)\.[^\. ]+/)
+    const decoded = JSON.parse(Buffer.from(arr!.groups!.val, "base64").toString())
+    
+    const alter_name = JSON.parse(Secret.ALTER_NAME)
+    const username = alter_name[decoded.email]
+
+    console.log(alter_name, username)
+
 
     const res = await fetch(`${Secret.AUTH_SERVER}/auth`, {
         method: "POST",
@@ -37,11 +47,12 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     return {
         props: {
             id: json.id,
+            username: username,
         },
     }
 }
 
-const Page = ({ id }: Props) => {
+const Page = ({ id, username }: Props) => {
     const { users, messages, isConnected, connect, getMessages, getUsers, postMessage } = useChat(id)
     const { ref: bottomRef, inView: isBottomInView } = useInView()
     const scrollRef = useRef<HTMLDivElement>(null)
@@ -145,7 +156,7 @@ const Page = ({ id }: Props) => {
                         </Flex>
                     </Box>
                 )}
-                <TextBox onSubmit={postMessage} />
+                <TextBox onSubmit={postMessage} name={username} />
             </Box>
         </Container>
     )

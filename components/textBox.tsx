@@ -1,12 +1,13 @@
 import { Button, Flex, Input, Textarea } from "@chakra-ui/react"
 import { useEffect, useRef, useState } from "react"
-import { userDB } from "../utils/db/user"
+import { UserData, userDB } from "../utils/db/user"
 
 interface Props {
-    onSubmit: (username: string, message: string) => void
+    onSubmit: (username: string, message: string) => void,
+    name?: string
 }
 
-const TextBox = ({ onSubmit }: Props) => {
+const TextBox = ({ onSubmit, name }: Props) => {
     const [username, setUsername] = useState("")
     const [message, setMessage] = useState("")
 
@@ -27,7 +28,7 @@ const TextBox = ({ onSubmit }: Props) => {
     }
 
     const getUserData = async () => {
-        const userData = await userDB.get()
+        const userData = (await userDB.get()) || {name: name} as UserData
         return userData
     }
 
